@@ -36,6 +36,19 @@ test('renders same number of options seasons are passed in', () => {
     expect(seasonOptions).toHaveLength(2);
 });
 
-test('handleSelect is called when an season is selected', () => { });
+test('handleSelect is called when an season is selected', () => { 
+    const handleSelect = jest.fn();
+    render(<Show show={testShow} selectedSeason={"none"} handleSelect={handleSelect}/>);
+    const selectOptions = screen.getByLabelText(/Select ASeason/);
+    userEvent.selectOptions(select, ['1']);
 
-test('component renders when no seasons are selected and when rerenders with a season passed in', () => { });
+    expect(handleSelect).toBeCalled();
+});
+
+test('component renders when no seasons are selected and when rerenders with a season passed in', () => { 
+    const { rerender } = render(<Show show={testShow} seclectedSeason={"none"} />);
+    let episodes = screen.queryByTestId('episodes-container');
+    expect(episodes).not.toBeInTheDocument();
+    
+    rerender(<Show show={testShow} selectedSeason={1} />);
+});
