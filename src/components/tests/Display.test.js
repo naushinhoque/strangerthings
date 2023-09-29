@@ -26,15 +26,31 @@ test('renders without errors with no props', async () => {
     render(<Display />)
  });
 
-test('renders Show component when the button is clicked ', () => {
+test('renders Show component when the button is clicked ', async () => {
     mockFetchShow.mockResolvedValueOnce(testShow);
-    
+
     render(<Display />);
     const button = screen.getByRole('button');
-    userEvent.clickButton();
+    userEvent.click(button);
+
+    const show = await screen.findByTestId('show-container');
+    expect(show).toBeInTheDocument();
  });
 
-test('renders show season options matching your data when the button is clicked', () => { });
+test('renders show season options matching your data when the button is clicked', async () => { 
+    mockFetchShow.mockResolvedValueOnce(testShow);
+
+    render(<Display />);
+    const button = screen.getByRole('button');
+    userEvent.click(button);
+
+    await waitFor(()=> {
+        const seasonOptions = screen.queryAllByTestId('season-option');
+        expect(seasonOptions).toHaveLength(2);
+
+    })
+
+});
 
 
 // This component holds the state values of the application and handles api calls. In this component's tests, you work with mocking external modules and working with async / await / waitFor_
